@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Médicos Disponibles - Consulta Médica</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c5aa0;
+            --secondary-color: #48cae4;
+            --accent-color: #023e8a;
+            --success-color: #06d6a0;
+            --light-bg: #f8f9fa;
+            --dark-text: #212529;
+            --muted-text: #6c757d;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(44, 90, 160, 0.95) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .page-header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .doctor-card {
+            background: rgba(255, 255, 255, 0.95);
+            border: none;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .doctor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .doctor-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2.5rem;
+            color: white;
+        }
+
+        .doctor-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--dark-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .doctor-specialty {
+            color: var(--primary-color);
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .doctor-schedule {
+            color: var(--muted-text);
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-appointment {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            color: white;
+            padding: 0.6rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-appointment:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            color: white;
+        }
+
+        .search-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .search-input {
+            border: none;
+            border-radius: 25px;
+            padding: 0.8rem 1.5rem;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+        }
+
+        .search-input:focus {
+            box-shadow: 0 0 0 3px rgba(44, 90, 160, 0.25);
+            background: white;
+        }
+
+        .specialty-badge {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .footer {
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        .no-doctors {
+            text-align: center;
+            color: white;
+            padding: 3rem;
+        }
+
+        .loading {
+            text-align: center;
+            color: white;
+            padding: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-heartbeat me-2"></i>Consulta Médica
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">
+                            <i class="fas fa-home me-1"></i>Inicio
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="medicos.html">
+                            <i class="fas fa-user-md me-1"></i>Médicos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="citas.html">
+                            <i class="fas fa-calendar-alt me-1"></i>Citas
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTENIDO -->
+    <div class="container" style="margin-top: 100px;">
+        <!-- HEADER -->
+        <div class="page-header">
+            <h1><i class="fas fa-user-md me-3"></i>Nuestros Médicos Especialistas</h1>
+            <p class="lead">Conoce a nuestro equipo de profesionales altamente calificados</p>
+        </div>
+
+        <!-- SEARCH SECTION -->
+        <div class="search-section">
+            <div class="row">
+                <div class="col-md-8">
+                    <input type="text" class="form-control search-input" id="search-input" 
+                           placeholder="🔍 Buscar médico por nombre o especialidad...">
+                </div>
+                <div class="col-md-4">
+                    <select class="form-select search-input" id="specialty-filter">
+                        <option value="">Todas las especialidades</option>
+                        <option value="Cardiología">Cardiología</option>
+                        <option value="Pediatría">Pediatría</option>
+                        <option value="Dermatología">Dermatología</option>
+                        <option value="Neurología">Neurología</option>
+                        <option value="Traumatología">Traumatología</option>
+                        <option value="Ginecología">Ginecología</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- DOCTORS GRID -->
+        <div class="loading" id="loading">
+            <i class="fas fa-spinner fa-spin fa-2x mb-3"></i>
+            <p>Cargando médicos...</p>
+        </div>
+
+        <div class="row" id="doctors-container" style="display: none;">
+            <!-- Los médicos se cargarán dinámicamente aquí -->
+        </div>
+
+        <div class="no-doctors" id="no-doctors" style="display: none;">
+            <i class="fas fa-user-slash fa-3x mb-3"></i>
+            <h3>No se encontraron médicos</h3>
+            <p>Intenta con otros términos de búsqueda</p>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5><i class="fas fa-heartbeat me-2"></i>Consulta Médica Online</h5>
+                    <p>Cuidando tu salud con la mejor atención médica disponible las 24 horas del día.</p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Contacto</h6>
+                    <p>
+                        <i class="fas fa-phone me-2"></i>+1 (555) 123-4567<br>
+                        <i class="fas fa-envelope me-2"></i>info@consultamedica.com<br>
+                        <i class="fas fa-map-marker-alt me-2"></i>Av. Salud 123, Ciudad
+                    </p>
+                </div>
+            </div>
+            <hr style="border-color: rgba(255,255,255,0.2);">
+            <div class="text-center">
+                <p>&copy; 2025 Consulta Médica Online. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    let allDoctors = [];
+    let filteredDoctors = [];
+
+    // Función para obtener icono según especialidad
+    function getSpecialtyIcon(specialty) {
+        const icons = {
+            'Cardiología': 'fas fa-heart',
+            'Pediatría': 'fas fa-baby',
+            'Dermatología': 'fas fa-eye',
+            'Neurología': 'fas fa-brain',
+            'Traumatología': 'fas fa-bone',
+            'Ginecología': 'fas fa-female',
+            'Medicina General': 'fas fa-user-md'
+        };
+        return icons[specialty] || 'fas fa-user-md';
+    }
+
+    // Función para crear tarjeta de médico
+    function createDoctorCard(doctor) {
+        const icon = getSpecialtyIcon(doctor.especialidad);
+        return `
+            <div class="col-md-4 col-lg-3 doctor-item" data-name="${doctor.nombre.toLowerCase()}" data-specialty="${doctor.especialidad.toLowerCase()}">
+                <div class="doctor-card">
+                    <div class="doctor-avatar">
+                        <i class="${icon}"></i>
+                    </div>
+                    <h5 class="doctor-name">${doctor.nombre}</h5>
+                    <div class="doctor-specialty">
+                        <span class="specialty-badge">${doctor.especialidad}</span>
+                    </div>
+                    <div class="doctor-schedule">
+                        <i class="fas fa-clock me-2"></i>${doctor.horario}
+                    </div>
+                    <button class="btn btn-appointment" onclick="scheduleAppointment('${doctor.nombre}', '${doctor.especialidad}')">
+                        <i class="fas fa-calendar-plus me-2"></i>Agendar Cita
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    // Función para mostrar médicos
+    function displayDoctors(doctors) {
+        const container = $('#doctors-container');
+        if (doctors.length === 0) {
+            container.hide();
+            $('#no-doctors').show();
+        } else {
+            container.html(doctors.map(doctor => createDoctorCard(doctor)).join(''));
+            container.show();
+            $('#no-doctors').hide();
+        }
+    }
+
+    // Función para filtrar médicos
+    function filterDoctors() {
+        const searchTerm = $('#search-input').val().toLowerCase();
+        const selectedSpecialty = $('#specialty-filter').val().toLowerCase();
+
+        filteredDoctors = allDoctors.filter(doctor => {
+            const matchesSearch = doctor.nombre.toLowerCase().includes(searchTerm) || 
+                                doctor.especialidad.toLowerCase().includes(searchTerm);
+            const matchesSpecialty = selectedSpecialty === '' || 
+                                   doctor.especialidad.toLowerCase().includes(selectedSpecialty);
+            return matchesSearch && matchesSpecialty;
+        });
+
+        displayDoctors(filteredDoctors);
+    }
+
+    // Función para agendar cita
+    function scheduleAppointment(doctorName, specialty) {
+        // Redirigir a la página de citas con parámetros
+        window.location.href = `citas.html?doctor=${encodeURIComponent(doctorName)}&specialty=${encodeURIComponent(specialty)}`;
+    }
+
+    // Cargar médicos al iniciar
+    $(document).ready(function () {
+        // Simular carga
+        setTimeout(() => {
+            $.getJSON("js/medicos.json", function (data) {
+                allDoctors = data;
+                filteredDoctors = [...allDoctors];
+                displayDoctors(filteredDoctors);
+                $('#loading').hide();
+            }).fail(function () {
+                $('#loading').html(`
+                    <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
+                    <p>Error al cargar los médicos. Por favor, intenta de nuevo más tarde.</p>
+                `);
+            });
+        }, 1000);
+
+        // Event listeners para filtros
+        $('#search-input').on('input', filterDoctors);
+        $('#specialty-filter').on('change', filterDoctors);
+    });
+</script>
+</body>
+
+</html>

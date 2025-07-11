@@ -1,0 +1,81 @@
+services:
+  frontend:
+    image: nginx:alpine
+    container_name: mediconsultas_frontend
+    ports:
+      - "80:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+    networks:
+      - network
+
+  backend:
+    build: 
+      context: ./backend
+      target: dev
+    container_name: mediconsultas_backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    volumes:
+      - ./backend:/app
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_DEVTOOLS_RESTART_ENABLED=true
+      - SPRING_DEVTOOLS_LIVERELOAD_ENABLED=true
+    networks:
+      - network
+
+  api:
+    image: python:3.11-slim
+    container_name: mediconsultas_api
+    working_dir: /app
+    volumes:
+      - ./api:/app
+    ports:
+      - "5000:5000"
+    command: >
+      sh -c "pip install --no-cache-dir -r requirements.txt && python app.py"
+    environment:
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+      - PYTHONPATH=/app
+    depends_on:
+      - postgres
+    networks:
+      - network
+
+  postgres:
+    image: postgres:15
+    container_name: mediconsultas_postgres
+    environment:
+      POSTGRES_DB: mediconsultas
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: mediconsultas_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@mediconsultas.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "8081:80"
+    depends_on:
+      - postgres
+    networks:
+      - network
+
+volumes:
+  postgres_data:
+
+networks:
+  network:
+    driver: bridge

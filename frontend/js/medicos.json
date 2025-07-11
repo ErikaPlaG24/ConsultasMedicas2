@@ -1,0 +1,42 @@
+[
+    {
+        "nombre": "Dr. Juan Pérez",
+        "especialidad": "Cardiología",
+        "horario": "Lunes a Viernes, 9:00 AM - 2:00 PM"
+    },
+    {
+        "nombre": "Dra. Ana Torres",
+        "especialidad": "Pediatría",
+        "horario": "Martes y Jueves, 3:00 PM - 6:00 PM"
+    },
+    {
+        "nombre": "Dr. Miguel Lara",
+        "especialidad": "Dermatología",
+        "horario": "Miércoles y Viernes, 10:00 AM - 1:00 PM"
+    },
+    {
+        "nombre": "Dra. Carmen Rodríguez",
+        "especialidad": "Ginecología",
+        "horario": "Lunes a Miércoles, 8:00 AM - 12:00 PM"
+    },
+    {
+        "nombre": "Dr. Roberto Silva",
+        "especialidad": "Neurología",
+        "horario": "Jueves y Viernes, 2:00 PM - 6:00 PM"
+    },
+    {
+        "nombre": "Dra. Elena Martínez",
+        "especialidad": "Traumatología",
+        "horario": "Lunes y Martes, 9:00 AM - 1:00 PM"
+    },
+    {
+        "nombre": "Dr. Carlos Vega",
+        "especialidad": "Medicina General",
+        "horario": "Lunes a Viernes, 7:00 AM - 11:00 AM"
+    },
+    {
+        "nombre": "Dra. Sofía Herrera",
+        "especialidad": "Pediatría",
+        "horario": "Sábados, 9:00 AM - 3:00 PM"
+    }
+]
