@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba de Conexión API</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Prueba de Conexión API</h3>
+                    </div>
+                    <div class="card-body">
+                        <button id="testConnection" class="btn btn-primary">Probar Conexión</button>
+                        <button id="testAuth" class="btn btn-secondary ms-2">Probar Autenticación</button>
+                        <hr>
+                        <div id="results" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api-service.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        document.getElementById('testConnection').addEventListener('click', async () => {
+            const results = document.getElementById('results');
+            results.innerHTML = '<div class="text-info">Probando conexión...</div>';
+            
+            try {
+                const response = await fetch('http://localhost:8080/api/medicos');
+                const data = await response.json();
+                
+                results.innerHTML = `
+                    <div class="alert alert-success">
+                        <h5>✅ Conexión exitosa!</h5>
+                        <p>Estado: ${response.status}</p>
+                        <p>Médicos encontrados: ${data.length}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    </div>
+                `;
+            } catch (error) {
+                results.innerHTML = `
+                    <div class="alert alert-danger">
+                        <h5>❌ Error de conexión</h5>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        });
+
+        document.getElementById('testAuth').addEventListener('click', async () => {
+            const results = document.getElementById('results');
+            results.innerHTML = '<div class="text-info">Probando autenticación...</div>';
+            
+            try {
+                const response = await fetch('http://localhost:8080/api/auth/medico/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: 'f.castillo@hospital.com',
+                        contrasena: 'password123'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    results.innerHTML = `
+                        <div class="alert alert-success">
+                            <h5>✅ Autenticación exitosa!</h5>
+                            <p>Usuario: ${data.nombre} ${data.apellido}</p>
+                            <p>Email: ${data.email}</p>
+                            <p>Especialidad: ${data.especialidad}</p>
+                        </div>
+                    `;
+                } else {
+                    results.innerHTML = `
+                        <div class="alert alert-warning">
+                            <h5>⚠️ Autenticación fallida</h5>
+                            <p>${data.message}</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                results.innerHTML = `
+                    <div class="alert alert-danger">
+                        <h5>❌ Error de autenticación</h5>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>

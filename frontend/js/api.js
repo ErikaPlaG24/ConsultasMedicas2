@@ -1,12 +1,25 @@
 // Configuración de la API - Detección automática del entorno
 const API_BASE_URL = (() => {
+    const hostname = window.location.hostname;
+    const port = window.location.port;
+    
+    console.log(`Frontend ejecutándose en: ${hostname}:${port}`);
+    
     // Si estamos en el contenedor Docker (puerto 80), usar localhost:8080
-    // Si estamos en desarrollo local, usar localhost:8080
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        return 'http://localhost:8080/api';
+    if (port === '80' || port === '' || port === '3000') {
+        console.log('Usando configuración para contenedor Docker');
+        return 'http://localhost:8080';
     }
+    
+    // Para desarrollo local o Live Server
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+        console.log('Usando configuración para desarrollo local');
+        return 'http://localhost:8080';
+    }
+    
     // Para producción o otros entornos
-    return `${window.location.protocol}//${window.location.hostname}:8080/api`;
+    console.log('Usando configuración para producción');
+    return `${window.location.protocol}//${hostname}:8080`;
 })();
 
 // Configuración de headers por defecto
@@ -20,11 +33,13 @@ class ApiService {
     
     // Método genérico para hacer peticiones HTTP
     async request(endpoint, options = {}) {
-        const url = `${API_BASE_URL}${endpoint}`;
+        const url = `${API_BASE_URL}/api${endpoint}`;
         const config = {
             headers: DEFAULT_HEADERS,
             ...options
         };
+
+        console.log(`Haciendo petición a: ${url}`);
 
         try {
             const response = await fetch(url, config);

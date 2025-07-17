@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test API</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+<body ng-app="testApp" ng-controller="TestController">
+    <h1>Test API Endpoints</h1>
+    
+    <div>
+        <h2>User Info</h2>
+        <pre>{{ user | json }}</pre>
+    </div>
+    
+    <div>
+        <h2>All Consultas</h2>
+        <button ng-click="loadAllConsultas()">Load All Consultas</button>
+        <pre>{{ allConsultas | json }}</pre>
+    </div>
+    
+    <div>
+        <h2>Consultas for Patient ID 2</h2>
+        <button ng-click="loadPatientConsultas()">Load Patient Consultas</button>
+        <pre>{{ patientConsultas | json }}</pre>
+    </div>
+    
+    <div>
+        <h2>All Medicos</h2>
+        <button ng-click="loadMedicos()">Load Medicos</button>
+        <pre>{{ medicos | json }}</pre>
+    </div>
+
+    <script>
+        angular.module('testApp', [])
+            .controller('TestController', function($scope, $http) {
+                $scope.user = JSON.parse(localStorage.getItem('user')) || null;
+                $scope.allConsultas = [];
+                $scope.patientConsultas = [];
+                $scope.medicos = [];
+
+                $scope.loadAllConsultas = function() {
+                    $http.get('http://localhost:8080/api/consultas')
+                        .then(function(response) {
+                            $scope.allConsultas = response.data;
+                            console.log('All consultas:', response.data);
+                        })
+                        .catch(function(error) {
+                            console.error('Error loading all consultas:', error);
+                        });
+                };
+
+                $scope.loadPatientConsultas = function() {
+                    $http.get('http://localhost:8080/api/consultas/paciente/2')
+                        .then(function(response) {
+                            $scope.patientConsultas = response.data;
+                            console.log('Patient consultas:', response.data);
+                        })
+                        .catch(function(error) {
+                            console.error('Error loading patient consultas:', error);
+                        });
+                };
+
+                $scope.loadMedicos = function() {
+                    $http.get('http://localhost:8080/api/medicos')
+                        .then(function(response) {
+                            $scope.medicos = response.data;
+                            console.log('Medicos:', response.data);
+                        })
+                        .catch(function(error) {
+                            console.error('Error loading medicos:', error);
+                        });
+                };
+
+                // Auto-load on page load
+                $scope.loadAllConsultas();
+                $scope.loadPatientConsultas();
+                $scope.loadMedicos();
+            });
+    </script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Login</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+<body ng-app="debugApp" ng-controller="DebugController">
+    <h1>Debug Login</h1>
+    
+    <div>
+        <h2>Usuario almacenado</h2>
+        <pre>{{ user | json }}</pre>
+    </div>
+    
+    <div>
+        <h2>Probar login</h2>
+        <form ng-submit="testLogin()">
+            <input type="email" ng-model="loginData.email" placeholder="Email" required><br><br>
+            <input type="password" ng-model="loginData.password" placeholder="Contraseña" required><br><br>
+            <select ng-model="loginData.role" required>
+                <option value="">Seleccionar rol</option>
+                <option value="paciente">Paciente</option>
+                <option value="medico">Médico</option>
+            </select><br><br>
+            <button type="submit">Probar Login</button>
+        </form>
+    </div>
+    
+    <div>
+        <h2>Respuesta del servidor</h2>
+        <pre>{{ loginResponse | json }}</pre>
+    </div>
+    
+    <div>
+        <h2>Probar API de consultas</h2>
+        <button ng-click="testConsultas()">Cargar Consultas</button>
+        <pre>{{ consultasResponse | json }}</pre>
+    </div>
+    
+    <div>
+        <h2>Probar API de médicos</h2>
+        <button ng-click="testMedicos()">Cargar Médicos</button>
+        <pre>{{ medicosResponse | json }}</pre>
+    </div>
+
+    <script>
+        angular.module('debugApp', [])
+            .controller('DebugController', function($scope, $http) {
+                $scope.user = JSON.parse(localStorage.getItem('user')) || null;
+                $scope.loginData = {};
+                $scope.loginResponse = null;
+                $scope.consultasResponse = null;
+                $scope.medicosResponse = null;
+
+                $scope.testLogin = function() {
+                    $http.post('http://localhost:8080/api/auth/login', {
+                        email: $scope.loginData.email,
+                        contrasena: $scope.loginData.password,
+                        tipoUsuario: $scope.loginData.role
+                    })
+                    .then(function(response) {
+                        $scope.loginResponse = response.data;
+                        localStorage.setItem('user', JSON.stringify(response.data));
+                        $scope.user = response.data;
+                    })
+                    .catch(function(error) {
+                        console.error('Error:', error);
+                        $scope.loginResponse = error.data;
+                    });
+                };
+
+                $scope.testConsultas = function() {
+                    $http.get('http://localhost:8080/api/consultas')
+                        .then(function(response) {
+                            $scope.consultasResponse = response.data;
+                        })
+                        .catch(function(error) {
+                            console.error('Error:', error);
+                            $scope.consultasResponse = error.data;
+                        });
+                };
+
+                $scope.testMedicos = function() {
+                    $http.get('http://localhost:8080/api/medicos')
+                        .then(function(response) {
+                            $scope.medicosResponse = response.data;
+                        })
+                        .catch(function(error) {
+                            console.error('Error:', error);
+                            $scope.medicosResponse = error.data;
+                        });
+                };
+            });
+    </script>
+</body>
+</html>

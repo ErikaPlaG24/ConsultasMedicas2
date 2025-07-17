@@ -21,9 +21,14 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="pacientes.html">Pacientes</a></li>
+                    <li class="nav-item" id="pacientesNavItem"><a class="nav-link active" href="pacientes.html">Pacientes</a></li>
                     <li class="nav-item"><a class="nav-link" href="medicos.html">Médicos</a></li>
                     <li class="nav-item"><a class="nav-link" href="citas.html">Citas</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="logout()">
+                            <i class="fas fa-sign-out-alt me-1"></i>Cerrar Sesión
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -124,9 +129,7 @@
         let pacienteEditando = null;
 
         // Cargar pacientes al iniciar la página
-        document.addEventListener('DOMContentLoaded', function() {
-            cargarPacientes();
-        });
+        // Se movió la verificación de autenticación y permisos al final del archivo
 
         // Cargar lista de pacientes
         async function cargarPacientes() {
@@ -343,6 +346,28 @@
             pacienteEditando = null;
         }
 
+        // Verificar autenticación y permisos al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            
+            // Verificar si el usuario está logueado
+            if (!user) {
+                alert('Debes iniciar sesión para acceder a esta página.');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Verificar si el usuario tiene permisos para ver pacientes
+            if (user.tipoUsuario === 'paciente') {
+                alert('No tienes permisos para acceder a esta página.');
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Cargar pacientes si el usuario tiene permisos
+            cargarPacientes();
+        });
+
         // Limpiar formulario al cerrar modal
         document.getElementById('modalPaciente').addEventListener('hidden.bs.modal', function() {
             limpiarFormulario();
@@ -354,6 +379,13 @@
                 buscarPaciente();
             }
         });
+
+        // Función logout
+        function logout() {
+            localStorage.removeItem('user');
+            localStorage.removeItem('userRole');
+            window.location.href = 'login.html';
+        }
     </script>
 </body>
 </html>

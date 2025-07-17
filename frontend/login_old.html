@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - Consultas Médicas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+        .login-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            overflow: hidden;
+            max-width: 400px;
+            width: 100%;
+        }
+        .login-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        .login-form {
+            padding: 2rem;
+        }
+        .role-selector {
+            margin-bottom: 1.5rem;
+        }
+        .role-btn {
+            width: 100%;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        .role-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: #667eea;
+        }
+        .form-control {
+            border-radius: 10px;
+            padding: 0.75rem;
+            border: 2px solid #e9ecef;
+            transition: border-color 0.3s ease;
+        }
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        .btn-login {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+        }
+        .btn-login:hover {
+            transform: translateY(-2px);
+        }
+        .register-link {
+            text-align: center;
+            margin-top: 1rem;
+        }
+        .register-link a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="login-container">
+                    <div class="login-header">
+                        <h2><i class="fas fa-user-md"></i> Iniciar Sesión</h2>
+                        <p class="mb-0">Accede a tu cuenta</p>
+                    </div>
+                    <div class="login-form">
+                        <div class="role-selector">
+                            <div class="btn-group d-grid gap-2" role="group">
+                                <button type="button" class="btn btn-outline-primary role-btn active" data-role="paciente">
+                                    <i class="fas fa-user"></i> Paciente
+                                </button>
+                                <button type="button" class="btn btn-outline-primary role-btn" data-role="medico">
+                                    <i class="fas fa-user-md"></i> Médico
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <form id="loginForm">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="contrasena" class="form-label">Contraseña</label>
+                                <input type="password" class="form-control" id="contrasena" name="contrasena" required>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-login">
+                                    <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <div class="register-link">
+                            <p>¿No tienes cuenta? <a href="register.html">Regístrate aquí</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert para mensajes -->
+    <div id="alertContainer" class="position-fixed top-0 start-50 translate-middle-x" style="z-index: 1050; margin-top: 20px;">
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>
+        }
+        .form-control:focus {
+            border-color: #2c5aa0;
+            box-shadow: 0 0 0 0.2rem rgba(44, 90, 160, 0.25);
+        }
+        .alert {
+            border-radius: 10px;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Header -->
+        <div class="login-header">
+            <h3><i class="fas fa-heartbeat me-2"></i>Consulta Médica</h3>
+            <p class="mb-0">Sistema de Gestión Médica</p>
+        </div>
+
+        <!-- Login Form -->
+        <div class="login-body">
+            <div id="loginSection">
+                <h4 class="text-center mb-4">Iniciar Sesión</h4>
+                <form id="loginForm">
+                    <div class="mb-3">
+                        <input type="email" class="form-control" id="loginEmail" placeholder="Correo electrónico" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="password" class="form-control" id="loginPassword" placeholder="Contraseña" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 mb-3">
+                        <i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión
+                    </button>
+                </form>
+                
+                <div class="text-center">
+                    <button class="btn btn-secondary w-100 mb-2" onclick="showRegister()">
+                        <i class="fas fa-user-plus me-2"></i>Crear Cuenta Nueva
+                    </button>
+                    <button class="btn btn-outline-primary w-100" onclick="guestAccess()">
+                        <i class="fas fa-eye me-2"></i>Acceso como Invitado
+                    </button>
+                </div>
+            </div>
+
+            <!-- Register Form -->
+            <div id="registerSection" style="display: none;">
+                <h4 class="text-center mb-4">Crear Cuenta</h4>
+                <form id="registerForm">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <input type="text" class="form-control" id="regNombre" placeholder="Nombre" required>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <input type="text" class="form-control" id="regApellido" placeholder="Apellido" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <input type="email" class="form-control" id="regEmail" placeholder="Correo electrónico" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="tel" class="form-control" id="regTelefono" placeholder="Teléfono (opcional)">
+                    </div>
+                    <div class="mb-3">
+                        <input type="password" class="form-control" id="regPassword" placeholder="Contraseña (mín. 6 caracteres)" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="password" class="form-control" id="regConfirmPassword" placeholder="Confirmar contraseña" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 mb-3">
+                        <i class="fas fa-user-check me-2"></i>Crear Cuenta
+                    </button>
+                </form>
+                
+                <div class="text-center">
+                    <button class="btn btn-outline-secondary" onclick="showLogin()">
+                        <i class="fas fa-arrow-left me-2"></i>Volver al Login
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Container -->
+    <div id="alertContainer" style="position: fixed; top: 20px; right: 20px; z-index: 1050;"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <script src="js/api-service.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>
