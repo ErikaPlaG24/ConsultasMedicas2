@@ -1,0 +1,9 @@
+{
+  "nombre": "Dr. Fernando",
+  "apellido": "Castillo",
+  "email": "f.castillo@hospital.com",
+  "telefono": "555-0101",
+  "especialidad": "Cardiología",
+  "registroProfesional": "MP-12345",
+  "contrasena": "password123"
+}

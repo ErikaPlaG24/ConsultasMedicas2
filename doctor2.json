@@ -1,0 +1,9 @@
+{
+  "nombre": "Dra. María",
+  "apellido": "González",
+  "email": "m.gonzalez@hospital.com",
+  "telefono": "555-0102",
+  "especialidad": "Pediatría",
+  "registroProfesional": "MP-67890",
+  "contrasena": "password123"
+}

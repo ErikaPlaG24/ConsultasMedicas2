@@ -1,0 +1,9 @@
+{
+  "nombre": "Dr. Carlos",
+  "apellido": "Ramírez",
+  "email": "c.ramirez@hospital.com",
+  "telefono": "555-0103",
+  "especialidad": "Dermatología",
+  "registroProfesional": "MP-11111",
+  "contrasena": "password123"
+}
