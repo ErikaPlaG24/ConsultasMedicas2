@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Pacientes - Consulta Médica</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-heartbeat me-2"></i>Consulta Médica
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="pacientes.html">Pacientes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="medicos.html">Médicos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="citas.html">Citas</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <div class="container" style="margin-top: 100px;">
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2><i class="fas fa-users me-2"></i>Gestión de Pacientes</h2>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPaciente">
+                        <i class="fas fa-plus me-2"></i>Nuevo Paciente
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- FILTROS -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    <input type="text" id="buscarPaciente" class="form-control" placeholder="Buscar por email...">
+                    <button class="btn btn-outline-secondary" onclick="buscarPaciente()">Buscar</button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <button class="btn btn-outline-primary" onclick="cargarPacientes()">
+                    <i class="fas fa-sync-alt me-2"></i>Actualizar Lista
+                </button>
+            </div>
+        </div>
+
+        <!-- LISTA DE PACIENTES -->
+        <div id="listaPacientes" class="row">
+            <!-- Los pacientes se cargarán aquí dinámicamente -->
+        </div>
+    </div>
+
+    <!-- MODAL PACIENTE -->
+    <div class="modal fade" id="modalPaciente" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="tituloModal">Nuevo Paciente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formPaciente">
+                        <input type="hidden" id="pacienteId">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="nombre" class="form-label">Nombre *</label>
+                                <input type="text" class="form-control" id="nombre" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="apellido" class="form-label">Apellido *</label>
+                                <input type="text" class="form-control" id="apellido" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email *</label>
+                                <input type="email" class="form-control" id="email" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="telefono" class="form-label">Teléfono</label>
+                                <input type="tel" class="form-control" id="telefono">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
+                                <input type="date" class="form-control" id="fecha_nacimiento">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="contrasena" class="form-label">Contraseña *</label>
+                                <input type="password" class="form-control" id="contrasena" required>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="guardarPaciente()">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/utils.js"></script>
+    
+    <script>
+        let pacienteEditando = null;
+
+        // Cargar pacientes al iniciar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            cargarPacientes();
+        });
+
+        // Cargar lista de pacientes
+        async function cargarPacientes() {
+            const contenedor = document.getElementById('listaPacientes');
+            UIUtils.mostrarCargando(contenedor, 'Cargando pacientes...');
+
+            try {
+                const pacientes = await apiService.obtenerPacientes();
+                
+                if (pacientes.length === 0) {
+                    contenedor.innerHTML = `
+                        <div class="col-12">
+                            <div class="alert alert-info text-center">
+                                <i class="fas fa-info-circle me-2"></i>
+                                No hay pacientes registrados. ¡Agrega el primero!
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    contenedor.innerHTML = pacientes.map(paciente => 
+                        UIUtils.crearTarjetaPaciente(paciente)
+                    ).join('');
+                }
+            } catch (error) {
+                manejarErrorAPI(error);
+                contenedor.innerHTML = `
+                    <div class="col-12">
+                        <div class="alert alert-danger text-center">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Error al cargar los pacientes
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Buscar paciente por email
+        async function buscarPaciente() {
+            const email = document.getElementById('buscarPaciente').value.trim();
+            
+            if (!email) {
+                mostrarNotificacion('Por favor ingrese un email para buscar', 'warning');
+                return;
+            }
+
+            if (!UIUtils.validarEmail(email)) {
+                mostrarNotificacion('Por favor ingrese un email válido', 'warning');
+                return;
+            }
+
+            const contenedor = document.getElementById('listaPacientes');
+            UIUtils.mostrarCargando(contenedor, 'Buscando paciente...');
+
+            try {
+                const paciente = await apiService.buscarPacientePorEmail(email);
+                
+                if (paciente) {
+                    contenedor.innerHTML = UIUtils.crearTarjetaPaciente(paciente);
+                    mostrarNotificacion('Paciente encontrado', 'success');
+                } else {
+                    contenedor.innerHTML = `
+                        <div class="col-12">
+                            <div class="alert alert-warning text-center">
+                                <i class="fas fa-search me-2"></i>
+                                No se encontró ningún paciente con el email: ${email}
+                            </div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                manejarErrorAPI(error);
+                contenedor.innerHTML = `
+                    <div class="col-12">
+                        <div class="alert alert-danger text-center">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Error al buscar el paciente
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Guardar paciente (crear o actualizar)
+        async function guardarPaciente() {
+            const form = document.getElementById('formPaciente');
+            
+            // Limpiar errores previos
+            form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+            form.querySelectorAll('.invalid-feedback').forEach(el => el.remove());
+            
+            const pacienteData = {
+                nombre: document.getElementById('nombre').value.trim(),
+                apellido: document.getElementById('apellido').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                telefono: document.getElementById('telefono').value.trim(),
+                fecha_nacimiento: document.getElementById('fecha_nacimiento').value,
+                contrasena: document.getElementById('contrasena').value
+            };
+
+            // Validaciones mejoradas
+            let errores = [];
+            
+            if (!pacienteData.nombre) {
+                errores.push({campo: 'nombre', mensaje: 'El nombre es obligatorio'});
+            }
+            
+            if (!pacienteData.apellido) {
+                errores.push({campo: 'apellido', mensaje: 'El apellido es obligatorio'});
+            }
+            
+            if (!pacienteData.email) {
+                errores.push({campo: 'email', mensaje: 'El email es obligatorio'});
+            } else if (!UIUtils.validarEmail(pacienteData.email)) {
+                errores.push({campo: 'email', mensaje: 'Formato de email inválido'});
+            }
+            
+            if (!pacienteData.contrasena) {
+                errores.push({campo: 'contrasena', mensaje: 'La contraseña es obligatoria'});
+            } else if (pacienteData.contrasena.length < 6) {
+                errores.push({campo: 'contrasena', mensaje: 'La contraseña debe tener al menos 6 caracteres'});
+            }
+
+            // Mostrar errores si existen
+            if (errores.length > 0) {
+                errores.forEach(error => {
+                    const campo = document.getElementById(error.campo);
+                    campo.classList.add('is-invalid');
+                    
+                    const feedback = document.createElement('div');
+                    feedback.className = 'invalid-feedback';
+                    feedback.textContent = error.mensaje;
+                    campo.parentNode.appendChild(feedback);
+                });
+                
+                mostrarNotificacion('Por favor corrija los errores en el formulario', 'warning');
+                return;
+            }
+
+            // Limpiar campos vacíos para evitar problemas en el backend
+            if (!pacienteData.telefono) delete pacienteData.telefono;
+            if (!pacienteData.fecha_nacimiento) delete pacienteData.fecha_nacimiento;
+
+            console.log('Enviando datos:', pacienteData);
+
+            try {
+                let resultado;
+                if (pacienteEditando) {
+                    resultado = await apiService.actualizarPaciente(pacienteEditando, pacienteData);
+                    mostrarNotificacion('Paciente actualizado correctamente', 'success');
+                } else {
+                    resultado = await apiService.crearPaciente(pacienteData);
+                    mostrarNotificacion('Paciente creado correctamente', 'success');
+                }
+
+                console.log('Resultado:', resultado);
+
+                // Cerrar modal y recargar lista
+                const modal = bootstrap.Modal.getInstance(document.getElementById('modalPaciente'));
+                modal.hide();
+                limpiarFormulario();
+                cargarPacientes();
+
+            } catch (error) {
+                console.error('Error al guardar paciente:', error);
+                manejarErrorAPI(error);
+            }
+        }
+
+        // Editar paciente
+        async function editarPaciente(id) {
+            try {
+                const paciente = await apiService.obtenerPaciente(id);
+                
+                if (paciente) {
+                    pacienteEditando = id;
+                    document.getElementById('tituloModal').textContent = 'Editar Paciente';
+                    document.getElementById('pacienteId').value = id;
+                    document.getElementById('nombre').value = paciente.nombre || '';
+                    document.getElementById('apellido').value = paciente.apellido || '';
+                    document.getElementById('email').value = paciente.email || '';
+                    document.getElementById('telefono').value = paciente.telefono || '';
+                    document.getElementById('fecha_nacimiento').value = paciente.fecha_nacimiento || '';
+                    document.getElementById('contrasena').value = ''; // No mostrar contraseña actual
+
+                    const modal = new bootstrap.Modal(document.getElementById('modalPaciente'));
+                    modal.show();
+                }
+            } catch (error) {
+                manejarErrorAPI(error);
+            }
+        }
+
+        // Eliminar paciente
+        function eliminarPaciente(id) {
+            UIUtils.crearModalConfirmacion(
+                'Confirmar Eliminación',
+                '¿Está seguro de que desea eliminar este paciente? Esta acción no se puede deshacer.',
+                async () => {
+                    try {
+                        await apiService.eliminarPaciente(id);
+                        mostrarNotificacion('Paciente eliminado correctamente', 'success');
+                        cargarPacientes();
+                    } catch (error) {
+                        manejarErrorAPI(error);
+                    }
+                }
+            );
+        }
+
+        // Limpiar formulario
+        function limpiarFormulario() {
+            document.getElementById('formPaciente').reset();
+            document.getElementById('tituloModal').textContent = 'Nuevo Paciente';
+            pacienteEditando = null;
+        }
+
+        // Limpiar formulario al cerrar modal
+        document.getElementById('modalPaciente').addEventListener('hidden.bs.modal', function() {
+            limpiarFormulario();
+        });
+
+        // Buscar al presionar Enter
+        document.getElementById('buscarPaciente').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                buscarPaciente();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Consulta Médica</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Arial', sans-serif;
+        }
+        .login-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            overflow: hidden;
+            max-width: 400px;
+            width: 100%;
+        }
+        .login-header {
+            background: linear-gradient(45deg, #2c5aa0, #48cae4);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        .login-body {
+            padding: 2rem;
+        }
+        .btn-primary {
+            background: linear-gradient(45deg, #2c5aa0, #48cae4);
+            border: none;
+            border-radius: 25px;
+            padding: 12px;
+            font-weight: 600;
+        }
+        .btn-secondary {
+            border-radius: 25px;
+            padding: 12px;
+            font-weight: 600;
+        }
+        .form-control {
+            border-radius: 25px;
+            border: 2px solid #e9ecef;
+            padding: 12px 20px;
+        }
+        .form-control:focus {
+            border-color: #2c5aa0;
+            box-shadow: 0 0 0 0.2rem rgba(44, 90, 160, 0.25);
+        }
+        .alert {
+            border-radius: 10px;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Header -->
+        <div class="login-header">
+            <h3><i class="fas fa-heartbeat me-2"></i>Consulta Médica</h3>
+            <p class="mb-0">Sistema de Gestión Médica</p>
+        </div>
+
+        <!-- Login Form -->
+        <div class="login-body">
+            <div id="loginSection">
+                <h4 class="text-center mb-4">Iniciar Sesión</h4>
+                <form id="loginForm">
+                    <div class="mb-3">
+                        <input type="email" class="form-control" id="loginEmail" placeholder="Correo electrónico" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="password" class="form-control" id="loginPassword" placeholder="Contraseña" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 mb-3">
+                        <i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión
+                    </button>
+                </form>
+                
+                <div class="text-center">
+                    <button class="btn btn-secondary w-100 mb-2" onclick="showRegister()">
+                        <i class="fas fa-user-plus me-2"></i>Crear Cuenta Nueva
+                    </button>
+                    <button class="btn btn-outline-primary w-100" onclick="guestAccess()">
+                        <i class="fas fa-eye me-2"></i>Acceso como Invitado
+                    </button>
+                </div>
+            </div>
+
+            <!-- Register Form -->
+            <div id="registerSection" style="display: none;">
+                <h4 class="text-center mb-4">Crear Cuenta</h4>
+                <form id="registerForm">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <input type="text" class="form-control" id="regNombre" placeholder="Nombre" required>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <input type="text" class="form-control" id="regApellido" placeholder="Apellido" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <input type="email" class="form-control" id="regEmail" placeholder="Correo electrónico" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="tel" class="form-control" id="regTelefono" placeholder="Teléfono (opcional)">
+                    </div>
+                    <div class="mb-3">
+                        <input type="password" class="form-control" id="regPassword" placeholder="Contraseña (mín. 6 caracteres)" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="password" class="form-control" id="regConfirmPassword" placeholder="Confirmar contraseña" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 mb-3">
+                        <i class="fas fa-user-check me-2"></i>Crear Cuenta
+                    </button>
+                </form>
+                
+                <div class="text-center">
+                    <button class="btn btn-outline-secondary" onclick="showLogin()">
+                        <i class="fas fa-arrow-left me-2"></i>Volver al Login
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Container -->
+    <div id="alertContainer" style="position: fixed; top: 20px; right: 20px; z-index: 1050;"></div>
+
+    <script src="js/api.js"></script>
+    <script>
+        const apiService = new ApiService();
+
+        // Mostrar notificaciones
+        function showAlert(message, type = 'info') {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertId = 'alert-' + Date.now();
+            
+            const alertHTML = `
+                <div id="${alertId}" class="alert alert-${type} alert-dismissible fade show" role="alert">
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+            
+            alertContainer.insertAdjacentHTML('beforeend', alertHTML);
+            
+            // Auto-dismiss after 5 seconds
+            setTimeout(() => {
+                const alert = document.getElementById(alertId);
+                if (alert) {
+                    alert.remove();
+                }
+            }, 5000);
+        }
+
+        // Cambiar entre login y registro
+        function showRegister() {
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('registerSection').style.display = 'block';
+        }
+
+        function showLogin() {
+            document.getElementById('registerSection').style.display = 'none';
+            document.getElementById('loginSection').style.display = 'block';
+        }
+
+        // Acceso como invitado
+        function guestAccess() {
+            showAlert('Accediendo como invitado...', 'info');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1000);
+        }
+
+        // Manejar login
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!email || !password) {
+                showAlert('Por favor complete todos los campos', 'warning');
+                return;
+            }
+
+            try {
+                // Buscar paciente por email
+                const paciente = await apiService.buscarPacientePorEmail(email);
+                
+                if (paciente) {
+                    showAlert('¡Login exitoso! Redirigiendo...', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
+                } else {
+                    showAlert('Usuario no encontrado. Verifica tu email o crea una cuenta.', 'danger');
+                }
+            } catch (error) {
+                console.error('Error en login:', error);
+                showAlert('Error al iniciar sesión. Intenta nuevamente.', 'danger');
+            }
+        });
+
+        // Manejar registro
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const nombre = document.getElementById('regNombre').value.trim();
+            const apellido = document.getElementById('regApellido').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const telefono = document.getElementById('regTelefono').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+            
+            // Validaciones
+            if (!nombre || !apellido || !email || !password) {
+                showAlert('Por favor complete todos los campos obligatorios', 'warning');
+                return;
+            }
+
+            if (password.length < 6) {
+                showAlert('La contraseña debe tener al menos 6 caracteres', 'warning');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showAlert('Las contraseñas no coinciden', 'warning');
+                return;
+            }
+
+            // Validar email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showAlert('Por favor ingresa un email válido', 'warning');
+                return;
+            }
+
+            try {
+                // Verificar si el email ya existe
+                const existingUser = await apiService.buscarPacientePorEmail(email);
+                
+                if (existingUser) {
+                    showAlert('Este email ya está registrado. Usa otro email o inicia sesión.', 'warning');
+                    return;
+                }
+
+                // Crear paciente
+                const pacienteData = {
+                    nombre: nombre,
+                    apellido: apellido,
+                    email: email.toLowerCase(),
+                    telefono: telefono || null,
+                    contrasena: password
+                };
+
+                console.log('Enviando datos:', pacienteData);
+                const resultado = await apiService.crearPaciente(pacienteData);
+                console.log('Resultado:', resultado);
+                
+                showAlert('¡Cuenta creada exitosamente! Ahora puedes iniciar sesión.', 'success');
+                
+                // Cambiar a login y llenar email
+                showLogin();
+                document.getElementById('loginEmail').value = email;
+                
+                // Limpiar formulario de registro
+                document.getElementById('registerForm').reset();
+                
+            } catch (error) {
+                console.error('Error en registro:', error);
+                
+                let mensaje = 'Error al crear la cuenta';
+                
+                if (error.message.includes('duplicate key') || error.message.includes('ya está registrado')) {
+                    mensaje = 'Este email ya está registrado. Usa otro email.';
+                } else if (error.message.includes('Failed to fetch')) {
+                    mensaje = 'No se puede conectar con el servidor. Verifica que esté funcionando.';
+                } else if (error.message.includes('HTTP 400')) {
+                    mensaje = 'Datos inválidos. Verifica todos los campos.';
+                } else if (error.message.includes('HTTP 500')) {
+                    mensaje = 'Error del servidor. Intenta nuevamente.';
+                }
+                
+                showAlert(mensaje, 'danger');
+            }
+        });
+
+        // Verificar si hay usuario logueado al cargar la página
+        window.addEventListener('load', () => {
+            // Si hay sesión activa, redirigir
+            const sesion = localStorage.getItem('pacienteLogueado');
+            if (sesion) {
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
