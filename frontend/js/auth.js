@@ -36,16 +36,22 @@ function validatePassword(password) {
 }
 
 // Función para manejar el login
-async function handleLogin(email, password, role) {
+async function handleLogin(email, password, role = null) {
     try {
+        const loginData = {
+            email: email,
+            contrasena: password
+        };
+        
+        // Solo incluir tipoUsuario si se especifica
+        if (role) {
+            loginData.tipoUsuario = role;
+        }
+        
         const response = await fetch(`${window.APP_CONFIG.API_BASE_URL}/api/auth/login`, {
             method: 'POST',
             headers: window.APP_CONFIG.DEFAULT_HEADERS,
-            body: JSON.stringify({
-                email: email,
-                contrasena: password,
-                tipoUsuario: role
-            })
+            body: JSON.stringify(loginData)
         });
         
         const data = await response.json();
@@ -53,16 +59,16 @@ async function handleLogin(email, password, role) {
         if (response.ok) {
             // Guardar información del usuario en localStorage
             localStorage.setItem('user', JSON.stringify(data));
-            localStorage.setItem('userRole', role);
+            localStorage.setItem('userRole', data.tipoUsuario);
             
             showAlert('¡Inicio de sesión exitoso!', 'success');
             
             // Redirigir según el rol
             setTimeout(() => {
-                if (role === 'paciente') {
+                if (data.tipoUsuario === 'paciente') {
                     window.location.href = 'index.html';
                 } else {
-                    window.location.href = 'medicos.html';
+                    window.location.href = 'index.html';
                 }
             }, 1500);
         } else {
@@ -137,9 +143,9 @@ function requireAuth() {
 
 // Inicialización cuando se carga la página
 document.addEventListener('DOMContentLoaded', function() {
-    // Manejar selección de rol en login
+    // Manejar selección de rol en registro (si existe)
     const roleButtons = document.querySelectorAll('.role-btn');
-    let selectedRole = 'paciente'; // Por defecto
+    let selectedRole = 'paciente'; // Por defecto para registro
     
     roleButtons.forEach(btn => {
         btn.addEventListener('click', function() {
@@ -172,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-    
+
     // Manejar formulario de login
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
@@ -193,7 +199,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            await handleLogin(email, password, selectedRole);
+            // Llamar sin especificar rol para autenticación automática
+            await handleLogin(email, password);
         });
     }
     

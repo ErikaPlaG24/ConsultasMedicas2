@@ -397,11 +397,21 @@
                 // Si hay usuario, actualizar navbar
                 updateNavbar();
                 
-                // Ocultar enlace de pacientes si el usuario es paciente
+                // Control de acceso basado en roles
                 const pacientesNavItem = document.getElementById('pacientesNavItem');
-                if (user.tipoUsuario === 'paciente' && pacientesNavItem) {
-                    pacientesNavItem.style.display = 'none';
+                
+                if (user.tipoUsuario === 'paciente') {
+                    // Los pacientes no pueden ver la lista de pacientes
+                    if (pacientesNavItem) {
+                        pacientesNavItem.style.display = 'none';
+                    }
+                } else if (user.tipoUsuario === 'medico' && !user.isAdmin) {
+                    // Los médicos no-admin no pueden ver la lista de pacientes
+                    if (pacientesNavItem) {
+                        pacientesNavItem.style.display = 'none';
+                    }
                 }
+                // Solo el admin (Dr. Fernando Castillo) puede ver todos los pacientes
             }
         });
     </script>

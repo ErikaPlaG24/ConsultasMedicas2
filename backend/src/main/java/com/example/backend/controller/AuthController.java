@@ -44,10 +44,12 @@ public class AuthController {
         private String nombre;
         private String apellido;
         private String email;
+        private boolean isAdmin;
 
         public LoginResponse(boolean success, String message) {
             this.success = success;
             this.message = message;
+            this.isAdmin = false; // Por defecto no es admin
         }
 
         // Getters y setters
@@ -65,19 +67,45 @@ public class AuthController {
         public void setApellido(String apellido) { this.apellido = apellido; }
         public String getEmail() { return email; }
         public void setEmail(String email) { this.email = email; }
+        public boolean getIsAdmin() { return isAdmin; }
+        public void setIsAdmin(boolean isAdmin) { this.isAdmin = isAdmin; }
     }
 
     // Login
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
         try {
-            if (request.getEmail() == null || request.getContrasena() == null || request.getTipoUsuario() == null) {
+            if (request.getEmail() == null || request.getContrasena() == null) {
                 return ResponseEntity.badRequest().body(
-                    new LoginResponse(false, "Todos los campos son obligatorios")
+                    new LoginResponse(false, "Email y contraseña son obligatorios")
                 );
             }
 
-            if ("paciente".equals(request.getTipoUsuario())) {
+            // Si no se especifica el tipo de usuario, intentar autenticar en ambas tablas
+            if (request.getTipoUsuario() == null || request.getTipoUsuario().isEmpty()) {
+                // Intentar primero como médico
+                Optional<Medico> medicoOpt = medicoRepository.findByEmailAndContrasena(
+                    request.getEmail(), request.getContrasena()
+                );
+                
+                if (medicoOpt.isPresent()) {
+                    Medico medico = medicoOpt.get();
+                    LoginResponse response = new LoginResponse(true, "Login exitoso");
+                    response.setTipoUsuario("medico");
+                    response.setUserId(medico.getId());
+                    response.setNombre(medico.getNombre());
+                    response.setApellido(medico.getApellido());
+                    response.setEmail(medico.getEmail());
+                    
+                    // Verificar si es Fernando Castillo (admin)
+                    if ("f.castillo@hospital.com".equals(medico.getEmail())) {
+                        response.setIsAdmin(true);
+                    }
+                    
+                    return ResponseEntity.ok(response);
+                }
+                
+                // Si no es médico, intentar como paciente
                 Optional<Paciente> pacienteOpt = pacienteRepository.findByEmailAndContrasena(
                     request.getEmail(), request.getContrasena()
                 );
@@ -92,20 +120,44 @@ public class AuthController {
                     response.setEmail(paciente.getEmail());
                     return ResponseEntity.ok(response);
                 }
-            } else if ("medico".equals(request.getTipoUsuario())) {
-                Optional<Medico> medicoOpt = medicoRepository.findByEmailAndContrasena(
-                    request.getEmail(), request.getContrasena()
-                );
-                
-                if (medicoOpt.isPresent()) {
-                    Medico medico = medicoOpt.get();
-                    LoginResponse response = new LoginResponse(true, "Login exitoso");
-                    response.setTipoUsuario("medico");
-                    response.setUserId(medico.getId());
-                    response.setNombre(medico.getNombre());
-                    response.setApellido(medico.getApellido());
-                    response.setEmail(medico.getEmail());
-                    return ResponseEntity.ok(response);
+            } else {
+                // Lógica original con tipo de usuario específico
+                if ("paciente".equals(request.getTipoUsuario())) {
+                    Optional<Paciente> pacienteOpt = pacienteRepository.findByEmailAndContrasena(
+                        request.getEmail(), request.getContrasena()
+                    );
+                    
+                    if (pacienteOpt.isPresent()) {
+                        Paciente paciente = pacienteOpt.get();
+                        LoginResponse response = new LoginResponse(true, "Login exitoso");
+                        response.setTipoUsuario("paciente");
+                        response.setUserId(paciente.getId());
+                        response.setNombre(paciente.getNombre());
+                        response.setApellido(paciente.getApellido());
+                        response.setEmail(paciente.getEmail());
+                        return ResponseEntity.ok(response);
+                    }
+                } else if ("medico".equals(request.getTipoUsuario())) {
+                    Optional<Medico> medicoOpt = medicoRepository.findByEmailAndContrasena(
+                        request.getEmail(), request.getContrasena()
+                    );
+                    
+                    if (medicoOpt.isPresent()) {
+                        Medico medico = medicoOpt.get();
+                        LoginResponse response = new LoginResponse(true, "Login exitoso");
+                        response.setTipoUsuario("medico");
+                        response.setUserId(medico.getId());
+                        response.setNombre(medico.getNombre());
+                        response.setApellido(medico.getApellido());
+                        response.setEmail(medico.getEmail());
+                        
+                        // Verificar si es Fernando Castillo (admin)
+                        if ("f.castillo@hospital.com".equals(medico.getEmail())) {
+                            response.setIsAdmin(true);
+                        }
+                        
+                        return ResponseEntity.ok(response);
+                    }
                 }
             }
 

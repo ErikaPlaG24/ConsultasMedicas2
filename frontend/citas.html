@@ -294,8 +294,8 @@
             ¡Cita agendada exitosamente!
         </div>
 
-        <!-- FORMULARIO PARA NUEVA CITA - Solo para pacientes -->
-        <div class="appointment-form" ng-if="user.tipoUsuario === 'paciente'">
+        <!-- FORMULARIO PARA NUEVA CITA - Para pacientes y médicos no-admin -->
+        <div class="appointment-form" ng-if="user.tipoUsuario === 'paciente' || (user.tipoUsuario === 'medico' && !user.isAdmin)">>
             <div class="form-section">
                 <h3 class="form-title">
                     <i class="fas fa-calendar-plus me-2"></i>
@@ -474,10 +474,17 @@
                         apiUrl = `http://localhost:8080/api/consultas/paciente/${$scope.user.userId}`;
                         console.log('Loading citas for paciente:', $scope.user.userId);
                     } else if ($scope.user.tipoUsuario === 'medico') {
-                        apiUrl = `http://localhost:8080/api/consultas/medico/${$scope.user.userId}`;
-                        console.log('Loading citas for medico:', $scope.user.userId);
+                        if ($scope.user.isAdmin) {
+                            // El admin puede ver todas las citas
+                            apiUrl = 'http://localhost:8080/api/consultas';
+                            console.log('Loading all citas for admin');
+                        } else {
+                            // Los médicos no-admin solo pueden ver sus propias citas
+                            apiUrl = `http://localhost:8080/api/consultas/medico/${$scope.user.userId}`;
+                            console.log('Loading citas for medico:', $scope.user.userId);
+                        }
                     } else {
-                        // Para otros tipos de usuario (admin, etc.), cargar todas las citas
+                        // Para otros tipos de usuario, cargar todas las citas
                         console.log('Loading all citas for admin/other user type');
                     }
                     
@@ -697,11 +704,21 @@
                         return;
                     }
                     
-                    // Ocultar enlace de pacientes si el usuario es paciente
+                    // Control de acceso basado en roles
                     const pacientesNavItem = document.getElementById('pacientesNavItem');
-                    if ($scope.user.tipoUsuario === 'paciente' && pacientesNavItem) {
-                        pacientesNavItem.style.display = 'none';
+                    
+                    if ($scope.user.tipoUsuario === 'paciente') {
+                        // Los pacientes no pueden ver la lista de pacientes
+                        if (pacientesNavItem) {
+                            pacientesNavItem.style.display = 'none';
+                        }
+                    } else if ($scope.user.tipoUsuario === 'medico' && !$scope.user.isAdmin) {
+                        // Los médicos no-admin no pueden ver la lista de pacientes
+                        if (pacientesNavItem) {
+                            pacientesNavItem.style.display = 'none';
+                        }
                     }
+                    // Solo el admin (Dr. Fernando Castillo) puede ver todos los pacientes
                     
                     checkUrlParameters();
                     $scope.loadMedicos();

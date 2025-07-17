@@ -358,8 +358,9 @@
             }
             
             // Verificar si el usuario tiene permisos para ver pacientes
-            if (user.tipoUsuario === 'paciente') {
-                alert('No tienes permisos para acceder a esta página.');
+            // Solo el admin (Dr. Fernando Castillo) puede ver y modificar pacientes
+            if (user.tipoUsuario === 'paciente' || (user.tipoUsuario === 'medico' && !user.isAdmin)) {
+                alert('No tienes permisos para acceder a esta página. Solo el administrador puede gestionar pacientes.');
                 window.location.href = 'index.html';
                 return;
             }
