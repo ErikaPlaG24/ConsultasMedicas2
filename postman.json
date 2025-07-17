@@ -1,0 +1,455 @@
+{
+	"info": {
+		"_postman_id": "d8dffbc8-244f-4ecc-b0c0-1c7f6473bede",
+		"name": "MediConsultas",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39399619",
+		"_collection_link": "https://test44-1110.postman.co/workspace/MediConsultas~886a0e28-34a9-4e2b-b23d-7cf7f8efe2b8/collection/39399619-d8dffbc8-244f-4ecc-b0c0-1c7f6473bede?action=share&source=collection_link&creator=39399619"
+	},
+	"item": [
+		{
+			"name": "Consultas",
+			"item": [
+				{
+					"name": "GetAllConsultas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/consultas",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"consultas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetConsultaByID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/consultas/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"consultas",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateConsulta",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id_paciente\": 1,\r\n  \"id_medico\": 1,\r\n  \"fecha_hora\": \"2024-06-10 14:30:00\",\r\n  \"motivo\": \"Consulta general\",\r\n  \"estado\": \"pendiente\",\r\n  \"notas_medicas\": \"Sin notas\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/consultas",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"consultas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateConsulta",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"notas_medicas\": \"Con notas\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/consultas/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"consultas",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteConsulta",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/consultas/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"consultas",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetConsultasPorPaciente",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/consultas/paciente/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"consultas",
+								"paciente",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetConsultasPorMedico",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/consultas/medico/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"consultas",
+								"medico",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Pacientes",
+			"item": [
+				{
+					"name": "GetAllPacientes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/pacientes",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"pacientes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreatePaciente",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nombre\": \"Juan\",\r\n  \"apellido\": \"Pérez\",\r\n  \"email\": \"juan.perez2@email.com\",\r\n  \"telefono\": \"5551234567\",\r\n  \"fecha_nacimiento\": \"1990-05-20\",\r\n  \"contrasena\": \"secreta123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/pacientes",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"pacientes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetPacienteByID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/pacientes/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"pacientes",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdatePacienteByID",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nombre\": \"Daniel\",\r\n  \"apellido\": \"Pedroza\",\r\n  \"email\": \"juan.perez@email.com\",\r\n  \"telefono\": \"5551234567\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/pacientes/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"pacientes",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeletePacienteByID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/pacientes/4",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"pacientes",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetPacienteByEmail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/pacientes/buscar/email?email=juan.perez@email.com",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"pacientes",
+								"buscar",
+								"email"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "juan.perez@email.com"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Medicos",
+			"item": [
+				{
+					"name": "GetAllMedicos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/medicos",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"medicos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetMedicoById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/medicos/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"medicos",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateMedico",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nombre\": \"Ana\",\r\n  \"apellido\": \"García\",\r\n  \"email\": \"ana.g0aq7rcia@email.com\",\r\n  \"telefono\": \"5559876543\",\r\n  \"especialidad\": \"Cardiología\",\r\n  \"registro_profesional\": \"MP1230451\",\r\n  \"contrasena\": \"claveMedico\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/medicos",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"medicos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateMedico",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nombre\": \"Daniel\",\r\n  \"apellido\": \"García\",\r\n  \"telefono\": \"5559876543\",\r\n  \"especialidad\": \"Cardiología\",\r\n  \"contrasena\": \"nuevaClaveMedico\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/medicos/8",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"medicos",
+								"8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteMedicoByID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nombre\": \"Daniel\",\r\n  \"apellido\": \"García\",\r\n  \"telefono\": \"5559876543\",\r\n  \"especialidad\": \"Cardiología\",\r\n  \"contrasena\": \"nuevaClaveMedico\"\r\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/api/medicos/8",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"medicos",
+								"8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetMedicosByEspecialidad",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/medicos/buscar/especialidad?especialidad=Cardiología",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"medicos",
+								"buscar",
+								"especialidad"
+							],
+							"query": [
+								{
+									"key": "especialidad",
+									"value": "Cardiología"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
