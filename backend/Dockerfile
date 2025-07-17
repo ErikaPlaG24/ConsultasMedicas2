@@ -20,17 +20,19 @@ FROM maven:3.9.4-eclipse-temurin-17-alpine AS dev
 
 WORKDIR /app
 COPY --from=deps /root/.m2/repository /root/.m2/repository
-COPY ./docker-entrypoint.sh /docker-entrypoint.sh
 
-# Install inotify-tools for file watching
-RUN apk add --no-cache inotify-tools
+# Install bash for script execution
+RUN apk add --no-cache bash
+
+# Copy everything including the entrypoint script
+COPY . /app
 
 # Make the entrypoint script executable
-RUN chmod +x /docker-entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
 EXPOSE 8080
 
-ENTRYPOINT ["/docker-entrypoint.sh"]
+ENTRYPOINT ["/app/entrypoint.sh"]
 
 # Stage 4: Production stage (optimized runtime)
 FROM eclipse-temurin:17.0.5_8-jdk-alpine AS release

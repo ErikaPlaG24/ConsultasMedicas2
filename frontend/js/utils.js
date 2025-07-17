@@ -33,16 +33,16 @@ class UIUtils {
                             <small class="text-muted">
                                 <i class="fas fa-envelope me-1"></i> ${paciente.email}<br>
                                 <i class="fas fa-phone me-1"></i> ${paciente.telefono || 'No especificado'}<br>
-                                <i class="fas fa-calendar me-1"></i> ${this.formatearFecha(paciente.fecha_nacimiento)}
+                                <i class="fas fa-calendar me-1"></i> ${this.formatearFecha(paciente.fechaNacimiento)}
                             </small>
                         </p>
                     </div>
                     <div class="card-footer bg-transparent">
                         <div class="btn-group w-100" role="group">
-                            <button class="btn btn-outline-primary btn-sm" onclick="editarPaciente(${paciente.id_paciente})">
+                            <button class="btn btn-outline-primary btn-sm" onclick="editarPaciente(${paciente.id})">
                                 <i class="fas fa-edit"></i> Editar
                             </button>
-                            <button class="btn btn-outline-danger btn-sm" onclick="eliminarPaciente(${paciente.id_paciente})">
+                            <button class="btn btn-outline-danger btn-sm" onclick="eliminarPaciente(${paciente.id})">
                                 <i class="fas fa-trash"></i> Eliminar
                             </button>
                         </div>
@@ -67,16 +67,16 @@ class UIUtils {
                             <small class="text-muted">
                                 <i class="fas fa-envelope me-1"></i> ${medico.email}<br>
                                 <i class="fas fa-phone me-1"></i> ${medico.telefono || 'No especificado'}<br>
-                                <i class="fas fa-id-card me-1"></i> ${medico.registro_profesional}
+                                <i class="fas fa-id-card me-1"></i> ${medico.registroProfesional}
                             </small>
                         </p>
                     </div>
                     <div class="card-footer bg-transparent">
                         <div class="btn-group w-100" role="group">
-                            <button class="btn btn-outline-success btn-sm" onclick="agendarCita(${medico.id_medico})">
+                            <button class="btn btn-outline-success btn-sm" onclick="agendarCita(${medico.id})">
                                 <i class="fas fa-calendar-plus"></i> Agendar
                             </button>
-                            <button class="btn btn-outline-primary btn-sm" onclick="editarMedico(${medico.id_medico})">
+                            <button class="btn btn-outline-primary btn-sm" onclick="editarMedico(${medico.id})">
                                 <i class="fas fa-edit"></i> Editar
                             </button>
                         </div>

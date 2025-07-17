@@ -353,20 +353,29 @@
 
     // Cargar médicos al iniciar
     $(document).ready(function () {
-        // Simular carga
-        setTimeout(() => {
-            $.getJSON("js/medicos.json", function (data) {
-                allDoctors = data;
+        // Cargar médicos desde la API
+        $.ajax({
+            url: 'http://localhost:8080/api/medicos',
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                // Mapear los datos del backend al formato esperado por el frontend
+                allDoctors = data.map(medico => ({
+                    nombre: `${medico.nombre} ${medico.apellido}`,
+                    especialidad: medico.especialidad,
+                    horario: "Consulte horarios disponibles" // Placeholder para el horario
+                }));
                 filteredDoctors = [...allDoctors];
                 displayDoctors(filteredDoctors);
                 $('#loading').hide();
-            }).fail(function () {
+            },
+            error: function() {
                 $('#loading').html(`
                     <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
                     <p>Error al cargar los médicos. Por favor, intenta de nuevo más tarde.</p>
                 `);
-            });
-        }, 1000);
+            }
+        });
 
         // Event listeners para filtros
         $('#search-input').on('input', filterDoctors);
